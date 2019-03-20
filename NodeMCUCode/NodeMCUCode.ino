@@ -11,7 +11,7 @@ void setup() {
   Serial.println("--------------");
   EEPROM.begin(512);
 
-
+  initWifi();
   
   // put your setup code here, to run once:
 

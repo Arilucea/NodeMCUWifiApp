@@ -22,13 +22,23 @@ void CreateWifi() {
   server.begin();
   server.onNotFound([](){
      command = server.uri();
-     server.send(200, "text/plain", command);
+     server.send(200, "text/plain");
   });
-  //GetData();
+  GetData();
 }
 
-void GerData(){
-  
+String recib;
+void GetData(){
+  while (true){
+    server.handleClient();
+    recib = command;
+    Serial.println("WIFI DATA");
+    Serial.println(recib);
+    recib.remove(0, 1);
+    Serial.println("-----------------------");
+    Serial.println(recib);
+    delay(500);
+  }  
 }
 
 
