@@ -12,6 +12,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -24,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
 
     EditText SSID;
     EditText Pass;
+    TextView textView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,14 +44,41 @@ public class MainActivity extends AppCompatActivity {
         SSID = (EditText) findViewById(R.id.SSID);
         Pass = (EditText) findViewById(R.id.PASS);
 
+        textView = (TextView) findViewById(R.id.textView);
+
         Button ButtonSend = (Button) findViewById(R.id.ButtonSend);
 
         ButtonSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String a = call((SSID.getText()).toString(), (Pass.getText()).toString());
+                /*String a = call((SSID.getText()).toString(), (Pass.getText()).toString());
+                SSID.setText("");
+                Pass.setText("");
+                Log.d("aaaaaaaaaaaaaa", a);*/
+                // ...
 
-                Log.d("aaaaaaaaaaaaaa", a);
+                // Instantiate the RequestQueue.
+                RequestQueue queue = Volley.newRequestQueue(MainActivity.this);
+                String url = String.valueOf(SSID.getText());
+
+                // Request a string response from the provided URL.
+                StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                        new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+                                //Log.d("aaaaaaaaaaa", response);
+                                // Display the first 500 characters of the response string.
+                                textView.setText("Response is: "+ response.substring(0,500));
+                            }
+                        }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        textView.setText("That didn't work!");
+                    }
+                });
+
+                // Add the request to the RequestQueue.
+                queue.add(stringRequest);
             }
         });
 
@@ -50,44 +86,6 @@ public class MainActivity extends AppCompatActivity {
 
 
     public String call(String SSID, String Pass){
-        String json = "";
-        String sql = "---";
-
-        URL url = null;
-        HttpURLConnection conn;
-
-
-        try {
-            url = new URL(sql);
-            conn = (HttpURLConnection) url.openConnection();
-
-            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-            StrictMode.setThreadPolicy(policy);
-
-            conn.setRequestMethod("GET");
-
-            conn.connect();
-
-            BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-
-            String inputLine;
-
-            StringBuffer response = new StringBuffer();
-
-
-            while ((inputLine = in.readLine()) != null) {
-                response.append(inputLine);
-            }
-
-            json = response.toString();
-            Log.d("aaaaaaaaaaaaaaaaaaa", json);
-
-
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return (json);
+        return "a";
     }
 }
